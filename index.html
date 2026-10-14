@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mascot Mayhem — Let 'Em Fight</title>
+<style>
+:root{--bg:#080b12;--panel:#111725;--ink:#f6f7fb;--muted:#9da8ba;--gold:#ffd23f;--red:#ff4b55}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% -20%,#25304b 0,#0b0e16 42%,#05070b 100%);color:var(--ink);font-family:Impact,Haettenschweiler,'Arial Narrow Bold',system-ui,sans-serif;min-height:100vh}
+button,select{font:inherit}.app{max-width:1100px;margin:auto;padding:18px}.top{text-align:center}.eyebrow{letter-spacing:.28em;color:var(--gold);font:700 12px system-ui}.logo{font-size:clamp(42px,8vw,82px);line-height:.9;margin:8px 0;text-transform:uppercase;text-shadow:0 5px 0 #000}.logo span{color:var(--red)}.tag{font:600 15px system-ui;color:var(--muted)}
+.card{background:linear-gradient(180deg,#151c2c,#0c111c);border:1px solid #29334a;border-radius:24px;padding:18px;box-shadow:0 24px 80px #0008;margin-top:18px}
+.pickers{display:grid;grid-template-columns:1fr 72px 1fr;gap:14px;align-items:end}.pick label{display:block;font:800 12px system-ui;color:#aab4c8;margin:0 0 7px 5px}.pick select{width:100%;background:#080c14;color:white;border:1px solid #34405a;padding:15px;border-radius:14px;font:800 16px system-ui}.vs{text-align:center;font-size:32px;color:var(--gold);padding-bottom:9px}
+.actions{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap}.fight{border:0;border-radius:14px;background:linear-gradient(#ffd84c,#f5a900);color:#161000;padding:14px 28px;font-size:22px;box-shadow:0 5px 0 #9d6800;cursor:pointer}.fight:active{transform:translateY(3px);box-shadow:0 2px 0 #9d6800}.small{background:#222b3c;color:white;border:1px solid #3b4862;border-radius:12px;padding:10px 14px;cursor:pointer;font:800 13px system-ui}
+.arena{position:relative;overflow:hidden;min-height:480px;border-radius:22px;margin-top:18px;border:2px solid #303c56;background:linear-gradient(#171d2a 0 55%,#2b3038 56% 58%,#11151c 59%);isolation:isolate}
+.arena:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 9.5%,#ffffff0a 10%);pointer-events:none}.lights{position:absolute;top:-45px;left:0;right:0;height:110px;background:radial-gradient(ellipse,#fff8 0,#fff0 65%);opacity:.25}
+.score{position:absolute;top:13px;left:50%;transform:translateX(-50%);z-index:10;background:#05070bd9;border:1px solid #3b465d;border-radius:14px;padding:8px 15px;font:800 12px system-ui;letter-spacing:.08em;color:#cbd4e4;white-space:nowrap}
+.fighter{position:absolute;bottom:55px;width:38%;max-width:360px;text-align:center;transition:transform .32s cubic-bezier(.2,.8,.2,1),filter .2s;z-index:3}.left{left:4%}.right{right:4%}.sprite{font-size:clamp(90px,18vw,180px);line-height:1;filter:drop-shadow(0 16px 10px #0008);user-select:none}.name{font-size:clamp(20px,4vw,34px);text-transform:uppercase;text-shadow:0 3px #000}.alias{font:700 12px system-ui;color:#b9c2d3;margin-top:3px}.hp{height:11px;background:#080a0f;border:1px solid #414b60;border-radius:8px;overflow:hidden;margin:8px auto;width:85%}.hp i{display:block;height:100%;background:linear-gradient(90deg,#e3293a,#ffd23f,#3bdd75);width:100%;transition:width .45s}
+.commentary{position:absolute;left:8%;right:8%;bottom:10px;z-index:8;background:#05070bd9;border:1px solid #303a50;border-radius:12px;padding:10px;text-align:center;font:800 14px system-ui;min-height:40px}.hitL{transform:translateX(60px) rotate(3deg) scale(1.05)}.hitR{transform:translateX(-60px) rotate(-3deg) scale(1.05)}.hurt{filter:brightness(2) saturate(.4)}.ko{transform:rotate(80deg) translateY(50px)!important;filter:grayscale(.7) brightness(.6)}
+.flash{position:absolute;inset:0;background:white;opacity:0;pointer-events:none;z-index:7}.flash.go{animation:flash .16s}@keyframes flash{50%{opacity:.65}}
+.winner{position:absolute;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:#03050ad9;text-align:center;padding:20px}.winner.show{display:flex;animation:pop .35s}@keyframes pop{from{opacity:0;transform:scale(.85)}}.winner h2{font-size:clamp(42px,9vw,92px);margin:0;color:var(--gold);text-shadow:0 5px #7d4b00}.winner p{font:800 18px system-ui;margin:10px}.winner .stamp{font-size:clamp(24px,5vw,44px)}
+.roster{margin-top:18px}.roster h3{text-align:center;margin:5px 0 15px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}.tile{background:#101725;border:1px solid #273149;border-radius:12px;padding:10px;font:700 12px system-ui}.tile b{display:block;font:900 14px system-ui;color:#fff}.tile span{color:#aab5c9}
+.note{font:500 11px system-ui;color:#738097;text-align:center;margin:16px auto;max-width:760px}
+@media(max-width:650px){.app{padding:10px}.pickers{grid-template-columns:1fr 38px 1fr;gap:6px}.pick select{font-size:13px;padding:12px 7px}.vs{font-size:22px}.arena{min-height:430px}.fighter{width:45%}.left{left:0}.right{right:0}.sprite{font-size:100px}.commentary{left:3%;right:3%}}
+</style>
+</head>
+<body><main class="app">
+<div class="top"><div class="eyebrow">FANTASY DECISIONS • SETTLED BADLY</div><div class="logo">MASCOT <span>MAYHEM</span></div><div class="tag">Why analyze football when two ridiculous creatures can beat the answer out of each other?</div></div>
+<section class="card">
+<div class="pickers"><div class="pick"><label>TEAM ONE</label><select id="a"></select></div><div class="vs">VS</div><div class="pick"><label>TEAM TWO</label><select id="b"></select></div></div>
+<div class="actions"><button class="fight" id="fight">LET 'EM FIGHT</button><button class="small" id="random">RANDOM MATCHUP</button><button class="small" id="sound">🔊 SOUND ON</button></div>
+<div class="arena" id="arena"><div class="lights"></div><div class="score" id="round">CHOOSE YOUR VICTIMS</div><div class="flash" id="flash"></div>
+<div class="fighter left" id="fa"><div class="sprite" id="sa"></div><div class="name" id="na"></div><div class="alias" id="aa"></div><div class="hp"><i id="ha"></i></div></div>
+<div class="fighter right" id="fb"><div class="sprite" id="sb"></div><div class="name" id="nb"></div><div class="alias" id="ab"></div><div class="hp"><i id="hb"></i></div></div>
+<div class="commentary" id="call">Pick two teams. The simulator has absolutely no respect for statistics.</div>
+<div class="winner" id="winner"><div><div class="stamp" id="wstamp"></div><h2 id="wname"></h2><p id="wline"></p><button class="fight" id="again">REMATCH</button></div></div>
+</div></section>
+<section class="roster card"><h3>THE 32 COMBATANTS</h3><div class="grid" id="grid"></div></section>
+<div class="note">Personal-use fan project. Team marks/logos are intentionally not used. Combatants are original, exaggerated representations inspired by team names, cities and football culture.</div>
+</main>
+<script>
+const teams=[
+["ARI","Arizona Cardinals","🦅","The Desert Redbird","Talon Tornado"],["ATL","Atlanta Falcons","🦅","The Dirty-Bird Falcon","Peachtree Plunge"],["BAL","Baltimore Ravens","🐦‍⬛","The Nevermore Nightmare","Midnight Divebomb"],["BUF","Buffalo Bills","🦬","The Lake-Effect Buffalo","Table Breaker"],
+["CAR","Carolina Panthers","🐈‍⬛","The Carolina Nightcat","Blackout Pounce"],["CHI","Chicago Bears","🐻","The Midway Grizzly","Deep-Dish Maul"],["CIN","Cincinnati Bengals","🐅","The Jungle Tiger","Stripe Strike"],["CLE","Cleveland Browns","🧝🏽‍♂️","The Lake Erie Brownie","Elf on the Warpath"],
+["DAL","Dallas Cowboys","🤠","The Lone-Star Gunslinger","Six-Shooter Suplex"],["DEN","Denver Broncos","🐎","The Mile-High Stallion","Rocky Mountain Stampede"],["DET","Detroit Lions","🦁","The Motor-City Lion","Honolulu Blue Roar"],["GB","Green Bay Packers","🧀","The Frozen Cheese Brute","Cheddar Hammer"],
+["HOU","Houston Texans","🐂","The Space-City Longhorn","Orbital Gore"],["IND","Indianapolis Colts","🐴","The Speedway Colt","Brickyard Blitz"],["JAX","Jacksonville Jaguars","🐆","The Duval Jaguar","Swamp Ambush"],["KC","Kansas City Chiefs","🐺","The Barbecue War-Wolf","Burnt-End Bite"],
+["LV","Las Vegas Raiders","🏴‍☠️","The Silver Raider","Blackjack Cutlass"],["LAC","LA Chargers","⚡","The Living Lightning Bolt","10,000-Volt Tackle"],["LAR","LA Rams","🐏","The Hollywood Ram","Blockbuster Headbutt"],["MIA","Miami Dolphins","🐬","The South-Beach Dolphin","Tidal Tail-Slap"],
+["MIN","Minnesota Vikings","🪓","The Northland Viking","Valhalla Axe-Kick"],["NE","New England Patriots","🗽","The Colonial Brawler","Freedom Haymaker"],["NO","New Orleans Saints","😇","The Bayou Saint","Halo Drop"],["NYG","New York Giants","🗿","The Gotham Giant","Skyscraper Slam"],
+["NYJ","New York Jets","✈️","The Runway Fighter Jet","Mach-2 Flyby"],["PHI","Philadelphia Eagles","🦅","The Broad-Street Eagle","Liberty Bell Bomb"],["PIT","Pittsburgh Steelers","⚙️","The Steel-Mill Golem","Foundry Fist"],["SF","San Francisco 49ers","⛏️","The Gold-Rush Prospector","Mother-Lode Pickaxe"],
+["SEA","Seattle Seahawks","🦅","The Rain-City Sea Hawk","Emerald Dive"],["TB","Tampa Bay Buccaneers","🏴‍☠️","The Gulf-Coast Buccaneer","Cannonball Clothesline"],["TEN","Tennessee Titans","🔱","The Nashville Titan","Olympus Thunderclap"],["WAS","Washington Commanders","🪖","The Capital Commander","Potomac Powerbomb"]];
+const $=id=>document.getElementById(id), A=$("a"),B=$("b");
+teams.forEach((t,i)=>{A.add(new Option(t[1],i));B.add(new Option(t[1],i))}); A.value=10;B.value=11;
+let sound=true,busy=false,ctx;
+function beep(freq=180,d=.08,type="square",vol=.035){if(!sound)return;ctx??=new (window.AudioContext||window.webkitAudioContext)();let o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;g.gain.value=vol;o.connect(g);g.connect(ctx.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+d);o.stop(ctx.currentTime+d)}
+function setF(){let x=teams[A.value],y=teams[B.value];$("sa").textContent=x[2];$("na").textContent=x[0];$("aa").textContent=x[3];$("sb").textContent=y[2];$("nb").textContent=y[0];$("ab").textContent=y[3];$("ha").style.width=$("hb").style.width="100%";$("fa").className="fighter left";$("fb").className="fighter right";$("winner").className="winner";$("round").textContent="READY TO RUMBLE";$("call").textContent=`${x[3]} vs. ${y[3]}. This is an objectively terrible way to make a fantasy decision.`}
+A.onchange=B.onchange=setF;setF();
+const sleep=m=>new Promise(r=>setTimeout(r,m));
+const lines=["OH! That looked unnecessarily personal.","No analytics model predicted THAT.","Somewhere, a fantasy expert just felt a disturbance.","The crowd is questioning every life choice that led here.","That move was legal in at least three states.","Absolutely zero fundamentals. Tremendous violence.","The waiver wire cannot save them now."];
+async function attack(att,def,hp,team,side){
+ let ae=$(att),de=$(def);ae.classList.add(side==="L"?"hitL":"hitR");beep(120+Math.random()*180,.07,"sawtooth");await sleep(220);$("flash").classList.add("go");de.classList.add("hurt");beep(70,.12,"square",.06);await sleep(140);$("flash").classList.remove("go");ae.classList.remove("hitL","hitR");de.classList.remove("hurt");hp.v=Math.max(0,hp.v-(12+Math.floor(Math.random()*20)));$(hp.id).style.width=hp.v+"%";$("call").textContent=Math.random()<.5?`${team[3]} unleashes ${team[4]}!`:lines[Math.floor(Math.random()*lines.length)];await sleep(500)
+}
+async function fight(){
+ if(busy)return;if(A.value===B.value){$("call").textContent="Even I won't make a mascot fight itself. Pick another team.";beep(90,.25);return}busy=true;$("winner").className="winner";let x=teams[A.value],y=teams[B.value],ha={v:100,id:"ha"},hb={v:100,id:"hb"};
+ // Winner is selected up front, 50/50. Fight choreography then reaches that result.
+ let win=Math.random()<.5?"A":"B",turn=Math.random()<.5?"A":"B";$("round").textContent="BELL RINGS • NO STATS • NO MERCY";beep(650,.1,"sine");await sleep(500);
+ for(let n=0;n<9;n++){if(turn==="A")await attack("fa","fb",hb,x,"L");else await attack("fb","fa",ha,y,"R");turn=turn==="A"?"B":"A";if(n===6){if(win==="A")hb.v=Math.min(hb.v,20);else ha.v=Math.min(ha.v,20)}}
+ if(win==="A"){while(hb.v>0)await attack("fa","fb",hb,x,"L");$("fb").classList.add("ko")}else{while(ha.v>0)await attack("fb","fa",ha,y,"R");$("fa").classList.add("ko")}
+ beep(880,.15,"square");setTimeout(()=>beep(1100,.18,"square"),130);setTimeout(()=>beep(1320,.3,"square"),280);await sleep(700);
+ let w=win==="A"?x:y;$("wstamp").textContent="🏆 THE MASCOT HAS SPOKEN";$("wname").textContent=w[1];$("wline").textContent=`Your completely scientific pick: ${w[0]}. ${w[3]} wins with ${w[4]}.`;$("winner").classList.add("show");$("round").textContent="DECISION FINAL*";busy=false
+}
+$("fight").onclick=fight;$("again").onclick=()=>{setF();setTimeout(fight,250)};$("random").onclick=()=>{let i=Math.floor(Math.random()*32),j;do{j=Math.floor(Math.random()*32)}while(j===i);A.value=i;B.value=j;setF()};$("sound").onclick=()=>{sound=!sound;$("sound").textContent=sound?"🔊 SOUND ON":"🔇 SOUND OFF"};
+$("grid").innerHTML=teams.map(t=>`<div class="tile"><b>${t[2]} ${t[0]} — ${t[3]}</b><span>Finisher: ${t[4]}</span></div>`).join("");
+</script></body></html>
